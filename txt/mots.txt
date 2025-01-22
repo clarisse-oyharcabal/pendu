@@ -1,31 +1,16 @@
-Words Ideas :
-
-Star (short)
-
-Moon (short)
-
-Mars (short)
-
-Orbit (medium)
-
-Comet (medium)
-
-Rover (medium)
-
-Alien (medium)
-
-Nebula (longer)
-
-Galaxy (longer)
-
-Astronaut (longer)
-
-Spaceship (longer)
-
-Satellite (longer)
-
-Telescope (longer)
-
-Exploration (longer)
-
-Constellation (longer)
+Algorithm
+Exception
+Compilation
+Framework
+Fonction
+Syntaxe
+Debugging
+Variable
+Dépendance
+Programme
+Virtualisation
+Interpréteur
+Structure
+Paramètre
+Optimisation
+#Ajouter très petite définition à chaque mot . 
