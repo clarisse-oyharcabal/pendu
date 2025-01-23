@@ -3,8 +3,17 @@ import pygame
 import sys
 
 # Screen size constants
-SCREEN_WIDTH = 900
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
+# Colors
+WATER_BLUE = (0, 98, 255)
+SKY_BLUE = (188, 202, 233)
+GREEN = (0, 152, 143)
+ORANGE = (231, 74, 52)
+VIOLET = (157, 97, 255)
+BLACK = (00, 00, 00)
+WHITE = (255, 255, 255)
 
 # Game main function
 def main():
