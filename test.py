@@ -50,7 +50,6 @@ fish = pygame.transform.scale(fish, (150, 150))
 le_image = pygame.transform.scale(le_image, (115, 82))
 pendule_image = pygame.transform.scale(pendule_image, (473, 105))
 
-
 # Redimensionner status_1.png, status_2.png et status_3.png pour qu'ils correspondent à la zone combinée
 status_1_width = pendule_image.get_width()  # Largeur de pendule.png
 status_1_height = pendule_image.get_height()  # Hauteur de pendule.png
@@ -62,8 +61,17 @@ status_3_image = pygame.transform.scale(status_3_image, (int(status_1_width * 1.
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (188, 202, 233)
-ROUGE = (255, 0, 0)
+ROUGE = (255, 69, 0)
 GRIS = (150, 150, 150)
+
+# Charger et jouer le fond sonore
+pygame.mixer.music.load("snd/mer.ogg")  # Assurez-vous que le fichier mer.ogg est présent
+pygame.mixer.music.play(-1)  # Jouer en boucle
+
+# Variables globales pour stocker l'état final de l'animation
+animation_finished = False  # Indique si l'animation est terminée
+final_pend_y = -10  # Position finale de pend.png
+final_status_image = status_3_image  # Image finale (status_3)
 
 # Fonction pour dessiner les boutons
 def draw_button(text, x, y, width, height, color, hover_color, font, screen):
@@ -84,6 +92,8 @@ def draw_button(text, x, y, width, height, color, hover_color, font, screen):
 
 # Fonction pour ajouter un mot
 def add_word():
+    global animation_finished, final_pend_y, final_status_image
+
     input_active = True
     user_text = ""
     input_box_width = 350
@@ -160,10 +170,9 @@ def add_word():
         screen.blit(flot, (0, 450 - 48 + 20))
         screen.blit(plateforme, (200, 450 - 161))
         screen.blit(logow_image, (10, 10))  # Afficher logow.png en haut à gauche
-        screen.blit(status_3_image, (255 - 140, 146 + 30 ))
+        screen.blit(final_status_image, (255 - 140, 146 + 30))  # Afficher status_3 directement
         screen.blit(fish, (screen_width - 170, 360 + 10 * math.sin(pygame.time.get_ticks() / 300)))
-        screen.blit(pend, (560,0))
-        
+        screen.blit(pend, (560, final_pend_y))  # Afficher pend.png à sa position finale
 
         # Gérer le clignotement du curseur
         if pygame.time.get_ticks() - cursor_timer > 500:
@@ -197,103 +206,24 @@ def add_word():
         pygame.display.update()
         clock.tick(30)
 
-    # Retour au menu principal
+    # Retour au menu principal sans réinitialiser l'animation
     return
 
-# Fonction pour le menu principal avec animation
-# Fonction pour le menu principal avec animation
+# Fonction pour le menu principal
 def main_menu():
-    le_x = -le_image.get_width()  # Départ à gauche
-    pendule_x = screen_width  # Départ à droite
-    man_y = -man.get_height()  # Départ en haut
-    man_x = 580
-    man_fallen = False
-    fish_visible = False
-    transition_to_status_1 = False  # Variable pour gérer la transition
+    global animation_finished, final_pend_y, final_status_image
 
-    # Variables pour l'animation de pend.png et status
-    pend_x = 560  # Position initiale de pend.png (plus à droite)
-    pend_y = -pend.get_height()  # Départ en haut
-    pend_speed = 10  # Vitesse de descente de pend.png (augmentée pour accélérer)
-    status_transition = False  # Pour gérer la transition entre status_1.png et status_2.png
-    status_final = False  # Pour gérer la transition entre status_2.png et status_3.png
-    pend_stopped = False  # Variable pour indiquer que pend.png s'est arrêté
-
-    # Variables pour le délai de 2 secondes
-    status_1_start_time = 0  # Temps auquel status_1.png commence à être affiché
-    status_1_delay = 2000  # Délai de 2 secondes (en millisecondes)
-
-    clock = pygame.time.Clock()
-
-    while True:
-        screen.blit(sky, (0, 0))
-        screen.blit(sea, (0, 450))
-        screen.blit(flot, (0, 450 - 48 + 20))
-        screen.blit(plateforme, (200, 450 - 161))
-        screen.blit(logow_image, (10, 10))  # Afficher logow.png en haut à gauche
-
-        # Animation d'apparition pour "LE" et "PENDULE"
-        if le_x < 95:
-            le_x += 10
-        if pendule_x > 255:
-            pendule_x -= 10
-
-        # Animation de descente pour "man"
-        if le_x >= 95 and pendule_x <= 255 and not man_fallen:
-            if man_y < 80:
-                man_y += 5 + 2 * math.sin(pygame.time.get_ticks() / 300)
-            else:
-                man_y = 80
-                man_fallen = True
-                transition_to_status_1 = True  # Activer la transition
-                status_1_start_time = pygame.time.get_ticks()  # Enregistrer le temps de début
-
-        # Afficher les éléments individuels ou status_1.png
-        if not transition_to_status_1:
-            screen.blit(le_image, (le_x, 176))
-            screen.blit(pendule_image, (pendule_x, 154))
-            screen.blit(man, (man_x, man_y))
-        else:
-            # Afficher status_1.png une fois la transition activée
-            if not status_transition:
-                screen.blit(status_1_image, (255 - 150, 146 - 40))  # Décalé de 50 pixels à gauche et 30 pixels vers le haut
-
-                # Attendre 2 secondes avant de faire descendre pend.png
-                if pygame.time.get_ticks() - status_1_start_time >= status_1_delay:
-                    status_transition = True  # Activer la transition vers status_2.png
-
-            # Faire descendre pend.png
-            if status_transition and pend_y < -1:  # Nouvelle limite de descente (pend.png s'arrête plus haut)
-                pend_y += pend_speed
-
-            # Afficher pend.png
-            if status_transition:
-                screen.blit(pend, (pend_x, pend_y))
-
-            # Transition vers status_2.png
-            if status_transition and not status_final:
-                screen.blit(status_2_image, (255 - 150, 146 - 10))  # Remplacer status_1.png par status_2.png
-
-                # Transition progressive vers status_3.png
-                if pend_y < 0:  # Limite de descente avant la transition finale
-                    pend_y += pend_speed
-                else:
-                    status_final = True  # Activer la transition finale
-
-            # Transition finale vers status_3.png
-            if status_final:
-                screen.blit(status_3_image, (255 - 140, 146 + 30))  # Remplacer status_2.png par status_3.png
-
-                # Arrêter pend.png en haut à droite
-                if pend_y < 0:  # Limite de descente finale
-                    pend_y += pend_speed
-                else:
-                    pend_y = 0  # Arrêter pend.png
-                    pend_stopped = True  # Indiquer que pend.png s'est arrêté
-
-        # Afficher "fish" et les boutons uniquement lorsque pend.png s'est arrêté
-        if pend_stopped:
-            fish_visible = True
+    # Si l'animation est déjà terminée, afficher directement l'état final
+    if animation_finished:
+        while True:
+            screen.blit(sky, (0, 0))
+            screen.blit(sea, (0, 450))
+            screen.blit(flot, (0, 450 - 48 + 20))
+            screen.blit(plateforme, (200, 450 - 161))
+            screen.blit(logow_image, (10, 10))  # Afficher logow.png en haut à gauche
+            screen.blit(final_status_image, (255 - 140, 146 + 30))  # Afficher status_3 directement
+            screen.blit(fish, (screen_width - 170, 360 + 10 * math.sin(pygame.time.get_ticks() / 300)))
+            screen.blit(pend, (560, final_pend_y))  # Afficher pend.png à sa position finale
 
             # Boutons
             button_width = 180
@@ -309,19 +239,154 @@ def main_menu():
             if draw_button("Niveau Difficile", button_x2, button_y, button_width, button_height, WHITE, BLUE, button_font, screen):
                 return "difficile"
             if draw_button("Ajouter un mot", button_x3, button_y, button_width, button_height, WHITE, BLUE, button_font, screen):
-                add_word()
+                add_word()  # Appeler la fonction add_word
 
-            if fish_visible:
-                fish_y = 360 + 10 * math.sin(pygame.time.get_ticks() / 300)
-                screen.blit(fish, (screen_width - 170, fish_y))
+            # Ajouter le bouton "Tableau des scores" en dessous de logow.png
+            score_button_x = 10  # Position X en dessous de logow.png
+            score_button_y = logow_image.get_height() + 40  # Position Y en dessous de logow.png
+            if draw_button("Tableau des scores", score_button_x, score_button_y, button_width, button_height, WHITE, ROUGE, button_font, screen):
+                pass  # Pour l'instant, il ne mène à rien
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-        pygame.display.update()
-        clock.tick(60)
+            pygame.display.update()
+    else:
+        # Sinon, exécuter l'animation normale
+        le_x = -le_image.get_width()  # Départ à gauche
+        pendule_x = screen_width  # Départ à droite
+        man_y = -man.get_height()  # Départ en haut
+        man_x = 580
+        man_fallen = False
+        fish_visible = False
+        transition_to_status_1 = False  # Variable pour gérer la transition
+
+        # Variables pour l'animation de pend.png et status
+        pend_x = 560  # Position initiale de pend.png (plus à droite)
+        pend_y = -pend.get_height() - 20   # Départ en haut
+        pend_speed = 10  # Vitesse de descente de pend.png (augmentée pour accélérer)
+        status_transition = False  # Pour gérer la transition entre status_1.png et status_2.png
+        status_final = False  # Pour gérer la transition entre status_2.png et status_3.png
+        pend_stopped = False  # Variable pour indiquer que pend.png s'est arrêté
+
+        # Variables pour le délai de 2 secondes
+        status_1_start_time = 0  # Temps auquel status_1.png commence à être affiché
+        status_1_delay = 2000  # Délai de 2 secondes (en millisecondes)
+
+        clock = pygame.time.Clock()
+
+        while True:
+            screen.blit(sky, (0, 0))
+            screen.blit(sea, (0, 450))
+            screen.blit(flot, (0, 450 - 48 + 20))
+            screen.blit(plateforme, (200, 450 - 161))
+            screen.blit(logow_image, (10, 10))  # Afficher logow.png en haut à gauche
+
+            # Animation d'apparition pour "LE" et "PENDULE"
+            if le_x < 95:
+                le_x += 10
+            if pendule_x > 255:
+                pendule_x -= 10
+
+            # Animation de descente pour "man"
+            if le_x >= 95 and pendule_x <= 255 and not man_fallen:
+                if man_y < 80:
+                    man_y += 5 + 2 * math.sin(pygame.time.get_ticks() / 300)
+                else:
+                    man_y = 80
+                    man_fallen = True
+                    transition_to_status_1 = True  # Activer la transition
+                    status_1_start_time = pygame.time.get_ticks()  # Enregistrer le temps de début
+
+            # Afficher les éléments individuels ou status_1.png
+            if not transition_to_status_1:
+                screen.blit(le_image, (le_x, 176))
+                screen.blit(pendule_image, (pendule_x, 154))
+                screen.blit(man, (man_x, man_y))
+            else:
+                # Afficher status_1.png une fois la transition activée
+                if not status_transition:
+                    screen.blit(status_1_image, (255 - 150, 146 - 40))  # Décalé de 50 pixels à gauche et 30 pixels vers le haut
+
+                    # Attendre 2 secondes avant de faire descendre pend.png
+                    if pygame.time.get_ticks() - status_1_start_time >= status_1_delay:
+                        status_transition = True  # Activer la transition vers status_2.png
+
+                # Faire descendre pend.png
+                if status_transition and pend_y < -1:  # Nouvelle limite de descente (pend.png s'arrête plus haut)
+                    pend_y += pend_speed
+
+                # Transition vers status_2.png
+                if status_transition and not status_final:
+                    screen.blit(status_2_image, (255 - 150, 146 - 10))  # Remplacer status_1.png par status_2.png
+
+                    # Transition progressive vers status_3.png
+                    if pend_y < 0:  # Limite de descente avant la transition finale
+                        pend_y += pend_speed
+                    else:
+                        status_final = True  # Activer la transition finale
+
+                # Transition finale vers status_3.png
+                if status_final:
+                    screen.blit(final_status_image, (255 - 140, 146 + 30))  # Remplacer status_2.png par status_3.png
+
+                    # Arrêter pend.png en haut à droite
+                    if pend_y < 0:  # Limite de descente finale
+                        pend_y += pend_speed
+                    else:
+                        pend_y = final_pend_y  # Arrêter pend.png
+                        pend_stopped = True  # Indiquer que pend.png s'est arrêté
+                        animation_finished = True  # Marquer l'animation comme terminée
+
+            # Afficher "fish" et les boutons uniquement lorsque pend.png s'est arrêté
+            if pend_stopped:
+                fish_visible = True
+
+                # Boutons
+                button_width = 180
+                button_height = 45
+                button_gap = 20
+                button_y = screen_height - button_height - 30
+                button_x1 = (screen_width - 3 * button_width - 2 * button_gap) / 4
+                button_x2 = button_x1 + button_width + button_gap
+                button_x3 = button_x2 + button_width + button_gap
+
+                if draw_button("Niveau Facile", button_x1, button_y, button_width, button_height, WHITE, BLUE, button_font, screen):
+                    return "facile"
+                if draw_button("Niveau Difficile", button_x2, button_y, button_width, button_height, WHITE, BLUE, button_font, screen):
+                    return "difficile"
+                if draw_button("Ajouter un mot", button_x3, button_y, button_width, button_height, WHITE, BLUE, button_font, screen):
+                    add_word()  # Appeler la fonction add_word
+
+                # Ajouter le bouton "Tableau des scores" en dessous de logow.png
+                score_button_x = 10  # Position X en dessous de logow.png
+                score_button_y = logow_image.get_height() + 40  # Position Y en dessous de logow.png
+                if draw_button("Tableau des scores", score_button_x, score_button_y, button_width, button_height, WHITE, ROUGE, button_font, screen):
+                    pass  # Pour l'instant, il ne mène à rien
+
+                if fish_visible:
+                    fish_y = 360 + 10 * math.sin(pygame.time.get_ticks() / 300)
+                    screen.blit(fish, (screen_width - 170, fish_y))
+
+                # Faire osciller pend.png légèrement une fois qu'il a atteint sa position finale
+                if pend_stopped:
+                    pend_y_offset = 5 * math.sin(pygame.time.get_ticks() / 300)  # Oscillation légère
+                    screen.blit(pend, (pend_x, pend_y + pend_y_offset))
+
+            # Ne pas afficher pend.png dans la partie status_transition si pend_stopped est actif
+            if not pend_stopped and status_transition:
+                screen.blit(pend, (pend_x, pend_y))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            pygame.display.update()
+            clock.tick(60)
+
 # Fonction principale
 def main():
     main_menu()
