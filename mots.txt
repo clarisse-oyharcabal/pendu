@@ -1,0 +1,16 @@
+Algorithm
+Exception
+Compilation
+Framework
+Fonction
+Syntaxe
+Debugging
+Variable
+Dépendance
+Programme
+Virtualisation
+Interpréteur
+Structure
+Paramètre
+Optimisation
+#Ajouter très petite définition à chaque mot . 
