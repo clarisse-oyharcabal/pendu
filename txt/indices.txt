@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 langage de pro
 langage
 langage
+=======
+petit animal mignon
+>>>>>>> e2ef18dd9070e47b64f50bddbcd7fd0cda1d3de5
