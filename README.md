@@ -1,7 +1,7 @@
 # pendu
 
-début de l'algorithme si vous voulez tester : dans la branche text_files_c le fichier test.py
-
-Inicio del algoritmo si queréis probar: en la rama text_files_c, el archivo test.py
-
-Start of the algorithm if you want to test it: in the branch text_files_c, the file test.py.
+Le Pendule" est un jeu de devinettes où le joueur doit deviner un mot lettre par lettre.
+Chaque erreur fait avancer un pendule qui frappe le personnage sur la plateforme.
+À la 5e erreur, le dernier strike le balance dans la mer agitée, où un gros poisson l'attrape.
+Le jeu propose deux niveaux de difficulté : facile et difficile, avec des mots et des indices adaptés.
+Le but est de deviner le mot avant la 5e erreur.
