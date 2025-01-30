@@ -22,7 +22,6 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("The galaxy hangman")
     
-    
     # Load the background image
     background = pygame.image.load("img/background.png")
     
