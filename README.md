@@ -1,7 +1,7 @@
-# Le Pendule - Jeu de Devinettes
+# Le Pendulé - Jeu de Devinettes
 
 ## Description
-"Le Pendule" est un jeu de devinettes en Python où le joueur doit deviner un mot en proposant des lettres. Le jeu propose deux niveaux de difficulté (facile et difficile) et inclut des animations, des effets sonores et un tableau des scores. Le joueur peut également ajouter de nouveaux mots et indices pour enrichir le jeu.
+"Le Pendulé" est un jeu de devinettes en Python (inspiré du jeu Le Pendu) où le joueur doit deviner un mot en proposant des lettres. Le jeu propose deux niveaux de difficulté (facile et difficile) et inclut des animations, des effets sonores et un tableau des scores. Le joueur peut également ajouter de nouveaux mots et indices pour enrichir le jeu.
 
 ## Fonctionnalités
 - **Deux niveaux de difficulté** : Facile et Difficile.
