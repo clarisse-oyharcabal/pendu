@@ -10,6 +10,26 @@
 - **Tableau des scores** : Enregistre les meilleurs scores des joueurs.
 - **Ajout de mots** : Permet aux joueurs d'ajouter de nouveaux mots et indices.
 - **Interface graphique** : Utilise Pygame pour une expérience utilisateur immersive.
+- 
+# Voici les images de mon projet :
+
+## Accueil
+<img src="img/acc.png" width="500" />
+
+## Ajouter un mot
+<img src="img/word.png" width="500" />
+<img src="img/effectword.png" width="500" />
+
+## Ajouter un indice
+<img src="img/hint.png" width="500" />
+<img src="img/hinteffect.png" width="500" />
+
+## Le jeu lancé
+<img src="img/game.png" width="500" />
+
+## Effets quand on perd (cœur qui se vide) et quand on gagne (les smileys remplissent l'écran)
+<img src="img/wins.png" width="500" />
+
 
 ## Fichiers Principaux
 - **le_Pendule2.py** : Contient la logique principale du jeu, y compris la gestion des mots, des scores, des animations et des interactions.
